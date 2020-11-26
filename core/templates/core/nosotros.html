@@ -1,0 +1,156 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+
+{% block contenido %}
+
+<div class="container-fluid bg-light">
+
+<!--mision y vision -->
+<div class="container pt-5">
+
+    {% for s in seleccionado %}
+    <div class="text-center pb-5">
+        <header id="titulo-mision-vision">
+            <h1 class="font-weight-bold pb-5">{{ s.1 }}</h1>
+        </header>
+    </div>
+
+    <div class="container">
+        <div class="row">
+
+            <!-- contenedor-mision -->
+            <div class="col-lg-6">
+
+                <h1 class="text-center">{{ s.2 }}</h1>
+                <hr>
+
+                <p class="my-5">
+                {{ s.4 }}
+                </p>
+
+                <hr>
+            </div>
+
+            <!-- contenedor-vision -->
+            <div class="col-lg-6">
+
+                <h1 class="text-center">{{ s.3 }}</h1>
+                <hr>
+
+                <p class="my-5">
+                {{ s.5 }}
+                </p>
+
+                <hr>
+
+            </div>
+            
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+
+<!--gestion nosotros-->
+{% if user.is_authenticated %}
+
+
+<div class="container-fluid p-5">
+
+    <div class="text-center mb-2">
+        <img class="text-center" style="width: 20rem;" src="{% static 'core/img/Gestion nosotros.png' %}">
+    </div>
+
+<div class="container col-sm-3 border rounded pt-5 pr-5 pl-5 pb-4 bg-light">
+
+    <form action="" method="post" onsubmit="setTimeout(function(){window.location.reload();},10);">
+        {% csrf_token %}
+
+        <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+            <label class="input-group-text" for="inputGroupSelect01">Nosotros: </label>
+            </div>
+            <select class="custom-select" id="cbonosotros" name="cbonosotros" required>
+            <option value="">Seleccione...</option>
+            {% for n in nosotros %}
+            <option value="{{ n.0 }}">Nº {{ n.0 }} - {{ n.1 }}</option>
+            {% endfor %}
+            </select>
+        </div>
+    
+        <div class="text-center">
+            <button class="btn-sm btn-warning" type="submit" name="seleccionar">Seleccionar</button>
+        </div>
+
+    </form>
+
+</div>
+
+
+
+<div class="container-fluid mt-2 col-sm-6">
+    <form action="" method="post">
+        {% csrf_token %}
+
+        <div class="container border rounded mb-2 pt-5 pr-5 pl-5 pb-4 bg-light">
+
+            <div class="input-group-sm mb-3">
+                <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Titulo de pagina: </span>
+                </div>
+                <input maxlength="50" name="titulo_pagina" type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1" required>
+            </div>
+
+        </div>
+
+        <div class="container border rounded mb-2 pt-5 pr-5 pl-5 pb-4 bg-light">
+
+            <div class="input-group-sm mb-3">
+                <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Titulo de mision: </span>
+                </div>
+                <input maxlength="50" name="titulo_mision" type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1" required>
+            </div>
+
+            <div class="input-group-sm mb-3">
+                <div class="input-group-prepend">
+                <span class="input-group-text">Descripcion de mision: </span>
+                </div>
+                <textarea maxlength="1000" name="descripcion_mision" class="form-control" aria-label="With textarea" required></textarea>
+            </div>
+
+        </div>
+
+        <div class="container border rounded mb-2 pt-5 pr-5 pl-5 pb-4 bg-light">
+
+            <div class="input-group-sm mb-3">
+                <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Titulo de vision: </span>
+                </div>
+                <input maxlength="50" name="titulo_vision" type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1" required>
+            </div>
+
+            <div class="input-group-sm mb-3">
+                <div class="input-group-prepend">
+                <span class="input-group-text">Descripcion de vision: </span>
+                </div>
+                <textarea maxlength="1000" name="descripcion_vision" class="form-control" aria-label="With textarea" required></textarea>
+            </div>
+
+            <div class="text-center p-3">
+                <button class="btn-sm rounded btn-warning p-2" type="submit" name="nuevonosotros" onsubmit="setTimeout(function(){window.location.reload();},10);">Agregar nuevo nosotros</button>
+            </div>
+
+        </div>
+{% endif %}
+
+    </form>
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

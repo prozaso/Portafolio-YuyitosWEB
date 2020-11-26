@@ -1,0 +1,11 @@
+
+{% for p in lista_productos_pedido %}
+
+    <th name="idprod" id="idprod" value="{{ p.0 }}">{{ p.0 }}</th>
+    <th name="nombre" id="nombre">{{ p.1 }}</th>
+    <th name="precio_c" id="precio_c" value="{{ p.2 }}">{{ p.2 }}</th>
+    <th name="precio_v" id="precio_v">${{ p.3 }}</th>
+    <input min="1" max="999" type="number" name="cantidad" id="cantidad" class="mt-2" onkeyup="multiplicar(('{{p.2}}'))" required>
+    <th name="valor_total" id="valor_total" value="valor_total">
+
+{% endfor %}

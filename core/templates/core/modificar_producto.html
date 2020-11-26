@@ -1,0 +1,271 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block contenido %}
+
+
+<!-- este div es solo de la fila 2 -->
+<div class="container-fluid bg-light">
+    <div class="col">
+
+            <!-- inputs productos -->
+            <div class="container border p-4 mb-3 text-center rounded col-sm-5">
+
+                <img class="mb-3" style="width: 20rem;" src="{% static 'core/img/MODIFICAR-ELIMINAR PRODUCTO.png' %}">
+
+                <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                    <div class="input-group mb-3 input-group-sm">
+                        <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Proveedor: </label>
+                        </div>
+                        <select class="custom-select" id="cboprov" name="cboprov" required>
+
+                            {% for pr in prod %}
+                            <option value="{{ pr.0 }}">{{ pr.1 }}</option>
+                            {% empty %}
+                                <option value="">Seleccione...</option>
+                                {% for p in proveedores %}
+                                <option value="{{ p.0 }}">{{ p.1 }}</option>
+                                {% endfor %}
+                            {% endfor %}
+
+                        </select>
+                    </div>
+
+                    <div class="input-group mb-3 input-group-sm">
+                        <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Familias de producto: </label>
+                        </div>
+                        <select class="custom-select" id="cbofamilia" name="cbofamilia" onchange="cambiarTipos()" required>
+                            
+                            {% for pr in prod %}
+                            <option value="{{ pr.2 }}">{{ pr.3 }}</option>
+                            {% empty %}
+                                <option value="">Seleccione...</option>
+                                {% for f in familias %}
+                                <option value="{{ f.0 }}">{{ f.1 }}</option>
+                                {% endfor %}
+                            {% endfor %}
+
+                        </select>
+                    </div>
+
+                    <div class="input-group mb-3 input-group-sm">
+                        <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Tipo de producto: </label>
+                        </div>
+                        <select class="custom-select" id="cbotipo" name="cbotipo" onchange="cambiarProductos()" required>
+                            
+                            {% for pr in prod %}
+                            <option value="{{ pr.4 }}">{{ pr.5 }}</option>
+                            {% empty %}
+                                <option value="">Seleccione...</option>
+                            {% endfor %}
+
+                        </select>
+                    </div>
+
+                    
+                        <!--PRODUCTO-->
+                        <div class="input-group mb-3 input-group-sm">
+                            <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputGroupSelect01">Producto: </label>
+                            </div>
+
+                            <select class="custom-select" id="cboprod" name="cboprod" required>
+
+                                {% for pr in prod %}
+                                <option value="{{ pr.6 }}">{{ pr.7 }}</option>
+                                {% empty %}
+                                <option value="">Seleccione...</option>
+                                {% endfor %}
+
+                            </select>
+
+                            <div class="input-group-append">
+                                <button class="btn btn-warning btn-sm" type="submit" id="prodid" name="prodid">Seleccionar producto</button>
+                            </div>
+                        </div>
+
+                        <!--PRODUCTO-->
+
+                    
+
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">Nombre: </span>
+                        </div>
+
+                        {% for pr in prod %}
+                        <input value="{{ pr.7 }}" maxlength="200" type="text" name="nombre" class="form-control" required>
+                        {% empty %}
+                        <input maxlength="200" type="text" name="nombre" class="form-control">
+                        {% endfor %}
+
+                    </div>
+
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">Precio de compra: </span>
+                        </div>
+
+                        {% for pr in prod %}
+                        <input value="{{ pr.8 }}" max="999999" min="1" type="number" name="precio_c" class="form-control" required>
+                        {% empty %}
+                        <input max="999999" min="1" type="number" name="precio_c" class="form-control">
+                        {% endfor %}
+
+                    </div>
+
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">Precio de venta: </span>
+                        </div>
+
+                        {% for pr in prod %}
+                        <input value="{{ pr.9 }}" max="999999" min="1" type="number" name="precio_v" class="form-control" required>
+                        {% empty %}
+                        <input max="999999" min="1" type="number" name="precio_v" class="form-control">
+                        {% endfor %}
+
+                    </div>
+
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">Stock: </span>
+                        </div>
+
+                        {% for pr in prod %}
+                        <input value="{{ pr.10 }}" max="999999" min="0" type="number" name="stock" class="form-control" required>
+                        {% empty %}
+                        <input max="999999" min="0" type="number" name="stock" class="form-control">
+                        {% endfor %}
+
+                    </div>
+
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">Stock critico: </span>
+                        </div>
+
+                        {% for pr in prod %}
+                        <input value="{{ pr.11 }}" max="999999" min="1" type="number" name="stock_c" class="form-control" required>
+                        {% empty %}
+                        <input max="999999" min="1" type="number" name="stock_c" class="form-control">
+                        {% endfor %}
+
+                    </div>
+
+                    <div class="input-group mb-3 input-group-sm">
+                        <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Unidad de medida: </label>
+                        </div>
+
+                        <select class="custom-select" id="inputGroupSelect01" name="cboumedida">
+                        
+                        {% for pr in prod %}
+                        <option value="{{ pr.12 }}">{{ pr.13 }}</option>
+                        {% empty %}
+                        <option selected>Seleccione...</option>
+                            {% for m in medidas %}
+                            <option value="{{ m.0 }}">{{ m.1 }}</option>
+                            {% endfor %}
+                        {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">Descripción: </span>
+                        </div>
+
+                        {% for pr in prod %}
+                        <input value="{{ pr.14 }}" maxlength="50" type="text" name="desc" class="form-control" required>
+                        {% empty %}
+                        <input maxlength="50" type="text" name="desc" class="form-control">
+                        {% endfor %}
+
+                    </div>
+
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">Fecha de vencimiento: </span>
+                        </div>
+
+                        {% for pr in prod %}
+                        <input value="{{ pr.15 }}" min="2020-08-01" type="date" name="fecha_v" class="form-control" required>
+                        {% empty %}
+                        <input min="2020-08-01" type="date" name="fecha_v" class="form-control">
+                        {% endfor %}
+
+                    </div>
+
+                    <div class="mb-3 custom-file">
+                        <input type="file" class="custom-file-input" id="customFileLang" lang="es" name="imagen">
+                        <label class="custom-file-label" for="customFileLang">Seleccionar Archivo</label>
+                    </div>
+
+                    <div class="mb-3 text-right">
+                    <button class="btn-warning btn-sm" type="reset">Limpiar</button>
+                    <button class="btn-warning btn-sm" type="submit" name="guardar">Guardar cambios</button>
+                    <button class="btn-danger btn-sm" type="submit" name="eliminar">Eliminar</button>
+                    </div>
+
+                    
+
+                    {{ mensaje }}
+                    {{ eliminado }}
+
+                </form>
+
+            </div>
+            <!-- fin inputs productos -->
+
+    </div>
+</div>
+
+
+
+{% endblock %}
+
+
+{% block javascript %}
+
+<script>
+    function cambiarTipos() {
+        let familiaId = document.getElementById("cbofamilia").value;
+        let url = '/tipos/?familiaid='+familiaId;
+        fetch(url)
+        .then(function(result) {
+            return result.text();
+        })
+        .then(function(result){
+            document.getElementById('cbotipo').innerHTML = result;
+        })
+
+    }
+</script>
+
+<script>
+    function cambiarProductos() {
+        let tipoId = document.getElementById('cbotipo').value;
+        let url = '/productos/?tipoid='+tipoId;
+        fetch(url)
+        .then(function(result) {
+            return result.text();
+        })
+        .then(function(result){
+            document.getElementById('cboprod').innerHTML = result;
+        })
+
+    }
+</script>
+
+<script>
+    function myFunction() {
+      document.getElementById("selected").selected = "true";
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block contenido %}
+
+<div class="exactCenter border rounded pt-5 pr-5 pl-5 pb-4 bg-light">
+    <form action="" method="POST">
+        {% csrf_token %}
+
+        
+
+        <div class="mb-3 text-right">
+            <button class="btn-sm btn-warning btn-block" style="font-size: medium; font-weight: bolder;" type="submit" name="registrar">Registrar</button>
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}

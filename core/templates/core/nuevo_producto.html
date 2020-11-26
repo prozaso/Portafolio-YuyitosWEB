@@ -1,0 +1,157 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% load crispy_forms_tags%}
+
+
+{% block contenido %}
+
+
+<!-- este div es solo de la fila 2 -->
+<div class="container-fluid bg-light">
+    <div class="col">
+
+            <!-- inputs productos -->
+            <div class="container border p-4 mb-3 text-center rounded col-sm-5">
+
+                <img class="mb-3" style="width: 20rem;" src="{% static 'core/img/AGREGAR PRODUCTO.png' %}">
+
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">Nombre: </span>
+                        </div>
+                        <input maxlength="200" type="text" name="nombre" class="form-control" required>
+                    </div>
+
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">Precio de compra: </span>
+                        </div>
+                        <input max="999999" min="1" type="number" name="precio_c" class="form-control" required>
+                    </div>
+
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">Precio de venta: </span>
+                        </div>
+                        <input max="999999" min="1" type="number" name="precio_v" class="form-control" required>
+                    </div>
+
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">Stock: </span>
+                        </div>
+                        <input max="999999" min="0" type="number" name="stock" class="form-control" required>
+                    </div>
+
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">Stock critico: </span>
+                        </div>
+                        <input max="999999" min="1" type="number" name="stock_c" class="form-control" required>
+                    </div>
+
+                    <div class="input-group mb-3 input-group-sm">
+                        <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Unidad de medida: </label>
+                        </div>
+                        <select class="custom-select" id="inputGroupSelect01" name="cboumedida" required>
+                        <option selected>Seleccione...</option>
+                        {% for m in medidas %}
+                        <option value="{{ m.0 }}">{{ m.1 }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">Descripción: </span>
+                        </div>
+                        <input maxlength="50" type="text" name="desc" class="form-control" required>
+                    </div>
+
+                    <div class="input-group mb-3 input-group-sm">
+                        <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Proveedor: </label>
+                        </div>
+                        <select class="custom-select" id="cboproveedor" name="cboproveedor" required>
+                        <option value="">Seleccione...</option>
+                        {% for p in proveedores %}
+                        <option value="{{ p.0 }}">{{ p.1 }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="input-group mb-3 input-group-sm">
+                        <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Familias de producto: </label>
+                        </div>
+                        <select class="custom-select" id="cbofamilia" name="cbofamilia" onchange="cambiarTipos()" required>
+                        <option value="">Seleccione...</option>
+                        {% for f in familias %}
+                        <option value="{{ f.0 }}">{{ f.1 }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="input-group mb-3 input-group-sm">
+                        <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Tipo de producto: </label>
+                        </div>
+                        <select class="custom-select" id="cbotipo" name="cbotipo" required>
+                            <option value="">Seleccione...</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">Fecha de vencimiento: </span>
+                        </div>
+                        <input min="2020-08-01" type="date" name="fecha_v" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3 custom-file">
+                        <input type="file" class="custom-file-input" id="customFileLang" lang="es" name="imagen" required>
+                        <label class="custom-file-label" for="customFileLang">Seleccionar Archivo</label>
+                    </div>
+
+                    <div class="mb-3 text-right">
+                    <button class="btn-warning btn-sm" type="reset">Limpiar</button>
+                    <button class="btn-warning btn-sm" type="submit"  value="Guardar" name="guardar">Guardar</button>
+                    </div>
+
+                    {{ mensaje }}
+
+                </form>
+
+            </div>
+            <!-- fin inputs productos -->
+
+    </div>
+</div>
+
+
+
+{% endblock %}
+
+
+{% block javascript %}
+
+<script>
+    function cambiarTipos() {
+        let familiaId = document.getElementById("cbofamilia").value;
+        let url = '/tipos/?familiaid='+familiaId;
+        fetch(url)
+        .then(function(result) {
+            return result.text();
+        })
+        .then(function(result){
+            document.getElementById('cbotipo').innerHTML = result;
+        })
+
+    }
+</script>
+{% endblock %}

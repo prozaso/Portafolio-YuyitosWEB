@@ -1,0 +1,36 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+
+{% block contenido %}
+
+<title>Registro de Infracciones</title>
+
+<!--  -->
+<div class="container-fluid bg-light rounded p-5">
+
+    <div class="row d-flex">
+
+        {% for p in productos %}
+                <div class="card m-2 d-flex" style="width: 18rem;">
+                    {% if p.imagen %}
+                        <img class="card-img-top" style="height: 16rem;" alt="Card image cap" src="data:imagen/png;base64, {{ p.imagen }}">
+                    {% else %}
+                        <img class="card-img-top" alt="Card image cap" src="{% static 'core/img/no disponible.png' %}">
+                    {% endif %}
+                    <ul class="list-group list-group-flush"></ul>
+                    <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                    <h5 class="card-title">{{ p.data.1 }}</h5>
+                    <p class="card-text">{{ p.data.8 }}</p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                    <li class="list-group-item">$ {{ p.data.3 }}</li>
+                </div>
+            {% endfor %}
+
+    </div>
+</div>
+<!--  -->
+
+{% endblock %}

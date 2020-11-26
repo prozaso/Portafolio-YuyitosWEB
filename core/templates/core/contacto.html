@@ -1,0 +1,47 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+
+{% block contenido %}
+
+<div class="container-fluid">
+
+<div class="col-md-4 exactCenter border rounded p-5 bg-light">
+  
+  <form action="" method="post">
+    {% csrf_token %}
+    
+    <label class="text-center" style="font-size: xx-large;">Comunicate con nosotros</label>
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1">Nombre: </span>
+        </div>
+        <input maxlength="40" name="nombre" type="text" class="form-control" placeholder="Nombre" aria-label="Username" aria-describedby="basic-addon1" required>
+    </div>
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1">Correo: </span>
+        </div>
+        <input maxlength="40" name="correo" type="email" class="form-control" placeholder="Correo electronico" aria-label="Username" aria-describedby="basic-addon1" required>
+    </div>
+    
+    <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Mensaje: </span>
+        </div>
+        <textarea maxlength="200" name="mensaje" class="form-control" placeholder="Aqui escriba su mensaje" aria-label="With textarea" required style="resize: none;"></textarea>
+    </div>
+
+    <button class="btn-sm btn-warning btn-block mt-3" type="submit" name="enviar">Enviar mensaje</button>          
+
+  </form>
+
+  {{ mensaje }}
+
+</div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block contenido %}
+
+<div class="exactCenter border rounded pt-5 pr-5 pl-5 pb-4 bg-light">
+    <form action="" method="POST">
+        {% csrf_token %}
+
+        <table class="table">
+
+            <div class="text-center mb-3" style="font-size: larger; font-weight: bolder;">
+                <label for="">Administración</label>
+            </div>
+
+            {{ form.as_table }}
+
+        </table>
+
+        <div class="mb-3 text-right">
+            <button class="btn-sm btn-warning btn-block" style="font-size: medium; font-weight: bolder;" type="submit" value="Login" name="guardar">Ingresar</button>
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}

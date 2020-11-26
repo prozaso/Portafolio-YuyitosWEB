@@ -1,0 +1,278 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block contenido %}
+
+<!--IMAGEN-->
+<div class="container-fluid bg-light">
+    <div class="row justify-content-center">
+        <div class="p-3">
+            <img class="" style="width: 20rem;" src="{% static 'core/img/ventas.png' %}">
+        </div>
+    </div>
+</div>
+<!--FIN IMAGEN-->
+
+    <div class="container-fluid bg-light rounded">
+        <div class="row">
+
+            
+
+            <!-- VENTA -->
+            <div class="col-sm-6 p-4 bg-light rounded">
+    
+                <div class="border p-3 text-center rounded">
+    
+                    <div class="p-3">
+                        <img class="" style="width: 10rem;" src="{% static 'core/img/venta.png' %}">
+                    </div>
+                    <!-- El onsubmit hace un refresh de la web luego del submit -->
+                    <form action="" method="POST" enctype="multipart/form-data" onsubmit="setTimeout(function(){window.location.reload();},20);">
+                        {% csrf_token %}
+                        <div class="m-5">
+    
+                            <div class="input-group input-group-sm">
+                                <div class="input-group-prepend">
+                                <span class="input-group-text">Fecha de hoy: </span>
+                                </div>
+                                <input min="2020-07-01" id="dateDefault" type="date" name="fecha_venta" class="form-control" required>
+    
+                                <button type="submit" class="btn-sm btn-success btn-sm btn-block mt-3" id="crearventa" name="crearventa">Crear venta</button>
+                                {{ mensaje }}
+                            </div>
+                        </div>
+    
+                    </form>
+    
+    
+                    <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                        <div class="input-group mb-3 input-group-sm">
+                            <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputGroupSelect01">Venta: </label>
+                            </div>
+                            <select class="custom-select" id="cboventa" name="cboventa" required>
+                            {% for v in ventas %}
+                            <option value="{{ v.0 }}">Nº {{ v.0 }} | {{ v.1 }}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+    
+                        <div class="input-group mb-3 input-group-sm">
+                            <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputGroupSelect01">Familias de producto: </label>
+                            </div>
+                            <select class="custom-select" id="cbofamilia" name="cbofamilia" onchange="cambiarTipos()" required>
+                            <option value="">Seleccione...</option>
+                            {% for f in familias %}
+                            <option value="{{ f.0 }}">{{ f.1 }}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+    
+                        <div class="input-group mb-3 input-group-sm">
+                            <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputGroupSelect01">Tipo de producto: </label>
+                            </div>
+                            <select class="custom-select" id="cbotipo" name="cbotipo" onchange="cambiarProductos()" required>
+                                <option value="">Seleccione...</option>
+                            </select>
+                        </div>
+    
+                        <div class="input-group mb-3 input-group-sm">
+                            <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputGroupSelect01">Producto: </label>
+                            </div>
+                            <select class="custom-select" id="cboprod" name="cboprod" required>
+                                <option value="">Seleccione...</option>
+                            </select>
+    
+                            <div class="input-group-append">
+                                <button  class="btn btn-warning btn-sm" type="button" id="prodid" name="prodid" onclick="agregarProducto()">Seleccionar producto</button>
+                            </div>
+                        </div>
+    
+                        <div class="table-responsive border">
+    
+                            <table class="table" id="tabla_pedido">
+    
+                                    <thead class="bg-warning">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nombre</th>
+                                            <th>Precio de compra</th>
+                                            <th>Precio de venta</th>
+                                            <th>Cantidad</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+    
+                                    <tr id="producto_data" name="producto_data">
+    
+                                    </tr>
+    
+                            </table>
+    
+                        </div>
+    
+                        <div class="text-align-center">
+                            <button type="submit" class="btn-sm btn-success btn-lg btn-block mt-5" id="agregarproducto" name="agregarproducto">Agregar producto a la venta</button>
+                            {{ mensaje2 }}
+                            {{ ventaConBoleta }}
+                        </div>
+                    </form>
+                </div>
+    
+            </div>
+            <!-- FIN VENTA -->
+
+            <!-- BOLETA -->
+            <div class="col-sm-6 p-4 bg-light rounded">
+
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <div class="border p-3 mb-2 text-center rounded">
+
+                        <div class="p-3">
+                            <img class="" style="width: 10rem;" src="{% static 'core/img/boleta.png' %}">
+                        </div>
+
+                        
+                        <div class="input-group mb-3 pl-5 pr-5 pt-5 input-group-sm">
+
+                            <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputGroupSelect01">Venta: </label>
+                            </div>
+                            <select class="custom-select" id="cboverventa" name="cboverventa">
+                            {% for v in ventas %}
+                            <option value="{{ v.0 }}">Nº {{ v.0 }} | {{ v.1 }}</option>
+                            {% endfor %}
+                            </select>
+
+                            <button type="submit" class="btn-sm btn-success btn-sm btn-block mt-3" name="verventa">Ver venta</button>
+                            
+                            <div class="custom-control custom-switch mt-4">
+                                <input type="checkbox" class="custom-control-input" id="customSwitch1" name="switch">
+                                <label class="custom-control-label" for="customSwitch1" style="font-weight: bolder;" >¿ Boleta fiada ?</label>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <table class="table border bg-light text-right" id="tabla_venta">
+
+                        <thead class="bg-warning">
+                            <tr>
+                                <th>Fecha de venta</th>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Total de producto</th>
+                            </tr>
+                        </thead>
+                
+                            {% for v in venta %}
+                            <tr>
+                                <th>{{ v.1 }}</th>
+                                <th>{{ v.2 }}</th>
+                                <th>{{ v.3 }}</th>
+                                <th>${{ v.4 }}</th>
+                            </tr>
+                        {% endfor %}
+                    </table>
+
+
+                    <div class="text-right">
+                        <h3> 
+                            {% for t in total %}
+                            Valor total de venta: ${{ t.0 }}
+                            {% endfor %}
+                        </h3>
+                    </div>
+
+                    <div class="text-right">
+                        <button type="submit" class="btn-lg btn-danger mt-3 pr-5 pl-5" name="crearboleta">Crear boleta</button>
+                    </div>
+
+                    <h3 class="text-center mt-5">{{ mensaje3 }}</h3>
+
+                </form>
+
+            </div>
+            <!-- FIN BOLETA -->
+
+    </div>
+
+ 
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+
+<!--BLOCK JAVASCRIPT-->
+{% block javascript %}
+<script src="{% static 'core/js/fechaHoy.js' %}"></script>
+
+<script>
+    function cambiarTipos() {
+        let familiaId = document.getElementById('cbofamilia').value;
+        let url = '/tipos/?familiaid='+familiaId;
+        fetch(url)
+        .then(function(result) {
+            return result.text();
+        })
+        .then(function(result){
+            document.getElementById('cbotipo').innerHTML = result;
+        })
+
+    }
+</script>
+
+<script>
+    function cambiarProductos() {
+        let tipoId = document.getElementById('cbotipo').value;
+        let url = '/productos/?tipoid='+tipoId;
+        fetch(url)
+        .then(function(result) {
+            return result.text();
+        })
+        .then(function(result){
+            document.getElementById('cboprod').innerHTML = result;
+        })
+
+    }
+</script>
+
+<script>
+    function agregarProducto() {
+        let prodId = document.getElementById('cboprod').value;
+        let url = '/productos_pedido/?prodid='+prodId;
+        fetch(url)
+        .then(function(result) {
+            return result.text();
+        })
+        .then(function(result){
+            document.getElementById('producto_data').innerHTML = result;
+        })
+    }
+</script>
+
+<script>
+    function multiplicar(precio)
+        {
+        var total = 0;  
+
+        var valor2 = document.getElementById('cantidad').value;
+
+        total = (precio * valor2);
+        var valortotal = document.getElementById('valor_total').value;
+
+        var Display = document.getElementById('valor_total');
+        Display.innerHTML = total;
+        }
+
+
+</script>
+{% endblock %}

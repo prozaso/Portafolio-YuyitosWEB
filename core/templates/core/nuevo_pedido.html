@@ -1,0 +1,284 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block contenido %}
+
+<!-- FILA GUIA -->
+<!-- <div class="container-fluid">
+    <!-- Control the column width, and how they should appear on different devices -->
+    <!-- <div class="row">
+        <div class="col-sm-1 border" style="background-color:yellow;">50%</div>
+        <div class="col-sm-1 border" style="background-color:yellow;">50%</div>
+        <div class="col-sm-1 border" style="background-color:yellow;">50%</div>
+        <div class="col-sm-1 border" style="background-color:yellow;">50%</div>
+        <div class="col-sm-1 border" style="background-color:yellow;">50%</div>
+        <div class="col-sm-1 border" style="background-color:yellow;">50%</div>
+        <div class="col-sm-1 border" style="background-color:yellow;">50%</div>
+        <div class="col-sm-1 border" style="background-color:yellow;">50%</div>
+        <div class="col-sm-1 border" style="background-color:yellow;">50%</div>
+        <div class="col-sm-1 border" style="background-color:yellow;">50%</div>
+        <div class="col-sm-1 border" style="background-color:yellow;">50%</div>
+        <div class="col-sm-1 border" style="background-color:yellow;">50%</div>
+    </div>
+</div> -->
+<!-- FIN FILA GUIA -->
+
+<!-- este div es solo de la fila 2 -->
+
+<!--IMAGEN-->
+<div class="container-fluid bg-light">
+    <div class="row justify-content-center">
+        <div class="p-3">
+            <img class="" style="width: 20rem;" src="{% static 'core/img/pedidos.png' %}">
+        </div>
+    </div>
+</div>
+<!--FIN IMAGEN-->
+
+    <div class="container-fluid bg-light rounded">
+        <div class="row">
+
+            <!-- PEDIDO -->
+            <div class="col-sm-6 p-4 bg-light rounded">
+    
+                <div class="border p-3 text-center rounded">
+    
+                    <!-- El onsubmit hace un refresh de la web luego del submit -->
+                    <form action="" method="POST" enctype="multipart/form-data" onsubmit="setTimeout(function(){window.location.reload();},20);">
+                        {% csrf_token %}
+                        <div class="m-5">
+    
+                            <div class="input-group input-group-sm">
+                                <div class="input-group-prepend">
+                                <span class="input-group-text">Fecha de hoy: </span>
+                                </div>
+                                
+                                <input min="2020-07-01" id="dateDefault" type="date" name="fecha_pedido" class="form-control" required>
+    
+                                <button type="submit" class="btn-sm btn-success btn-sm btn-block mt-3" id="crearpedido" name="crearpedido">Crear pedido</button>
+                                {{ mensaje }}
+                            </div>
+                        </div>
+    
+                    </form>
+    
+    
+                    <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                        <div class="input-group mb-3 input-group-sm">
+                            <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputGroupSelect01">Pedido: </label>
+                            </div>
+                            <select class="custom-select" id="cbopedido" name="cbopedido" required>
+                            {% for p in pedidos %}
+                            <option value="{{ p.0 }}">Nº {{ p.0 }} | {{ p.1 }}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+    
+                        <div class="input-group mb-3 input-group-sm">
+                            <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputGroupSelect01">Proveedor: </label>
+                            </div>
+                            <select class="custom-select" id="cboprov" name="cboprov" required>
+                            <option value="">Seleccione...</option>
+                            {% for p in proveedores %}
+                            <option value="{{ p.0 }}">{{ p.1 }}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+    
+                        <div class="input-group mb-3 input-group-sm">
+                            <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputGroupSelect01">Familias de producto: </label>
+                            </div>
+                            <select class="custom-select" id="cbofamilia" name="cbofamilia" onchange="cambiarTipos()" required>
+                            <option value="">Seleccione...</option>
+                            {% for f in familias %}
+                            <option value="{{ f.0 }}">{{ f.1 }}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+    
+                        <div class="input-group mb-3 input-group-sm">
+                            <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputGroupSelect01">Tipo de producto: </label>
+                            </div>
+                            <select class="custom-select" id="cbotipo" name="cbotipo" onchange="cambiarProductos()" required>
+                                <option value="">Seleccione...</option>
+                            </select>
+                        </div>
+    
+                        <div class="input-group mb-3 input-group-sm">
+                            <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputGroupSelect01">Producto: </label>
+                            </div>
+                            <select class="custom-select" id="cboprod" name="cboprod" required>
+                                <option value="">Seleccione...</option>
+                            </select>
+    
+                            <div class="input-group-append">
+                                <button  class="btn btn-warning btn-sm" type="button" id="prodid" name="prodid" onclick="agregarProducto()">Seleccionar producto</button>
+                            </div>
+                        </div>
+    
+                        <div class="table-responsive border">
+    
+                            <table class="table" id="tabla_pedido">
+    
+                                    <thead class="bg-warning">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nombre</th>
+                                            <th>Precio de compra</th>
+                                            <th>Precio de venta</th>
+                                            <th>Cantidad</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+    
+                                    <tr id="producto_data" name="producto_data">
+    
+                                    </tr>
+    
+                            </table>
+    
+                        </div>
+    
+                        <div class="text-align-center">
+                            <button type="submit" class="btn-sm btn-success btn-lg btn-block mt-5" id="agregarproducto" name="agregarproducto">Agregar producto al pedido</button>
+                            {{ mensaje2 }}
+                        </div>
+                    </form>
+                </div>
+    
+            </div>
+            <!-- FIN PEDIDO -->
+
+            <!-- LISTA -->
+            <div class="col-sm-6 p-4 bg-light rounded">
+
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <div class="border p-3 mb-2 text-center rounded">
+                        <div class="input-group mb-3 p-5 input-group-sm">
+                            <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputGroupSelect01">Pedido: </label>
+                            </div>
+                            <select class="custom-select" id="cboverpedido" name="cboverpedido" required>
+                            {% for p in pedidos %}
+                            <option value="{{ p.0 }}">Nº {{ p.0 }} | {{ p.1 }}</option>
+                            {% endfor %}
+                            </select>
+                            <button type="submit" class="btn-sm btn-success btn-sm btn-block mt-3" name="verpedido">Ver pedido</button>
+                        </div>
+                    </div>
+
+                    <table class="table border bg-light" id="tabla_pedido">
+
+                        <thead class="bg-warning">
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Total de producto</th>
+                            </tr>
+                        </thead>
+                
+                            {% for p in pedido %}
+                            <tr>
+                                <th>{{ p.0 }}</th>
+                                <th>{{ p.1 }}</th>
+                                <th>${{ p.2 }}</th>
+                            </tr>
+                        {% endfor %}
+                    </table>
+
+                    <div class="text-right">
+                        <h3> 
+                            {% for t in total %}
+                            Valor total de pedido: ${{ t.0 }}
+                            {% endfor %}
+                        </h3>
+                    </div>
+
+                </form>
+
+            </div>
+            <!-- FIN LISTA DE PEDIDO -->
+
+    </div>
+ 
+
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+
+<!--BLOCK JAVASCRIPT-->
+{% block javascript %}
+<script src="{% static 'core/js/fechaHoy.js' %}"></script>
+
+<script>
+    function cambiarTipos() {
+        let familiaId = document.getElementById('cbofamilia').value;
+        let url = '/tipos/?familiaid='+familiaId;
+        fetch(url)
+        .then(function(result) {
+            return result.text();
+        })
+        .then(function(result){
+            document.getElementById('cbotipo').innerHTML = result;
+        })
+
+    }
+</script>
+
+<script>
+    function cambiarProductos() {
+        let tipoId = document.getElementById('cbotipo').value;
+        let url = '/productos/?tipoid='+tipoId;
+        fetch(url)
+        .then(function(result) {
+            return result.text();
+        })
+        .then(function(result){
+            document.getElementById('cboprod').innerHTML = result;
+        })
+
+    }
+</script>
+
+<script>
+    function agregarProducto() {
+        let prodId = document.getElementById('cboprod').value;
+        let url = '/productos_pedido/?prodid='+prodId;
+        fetch(url)
+        .then(function(result) {
+            return result.text();
+        })
+        .then(function(result){
+            document.getElementById('producto_data').innerHTML = result;
+        })
+    }
+</script>
+
+<script>
+    function multiplicar(precio)
+        {
+        var total = 0;  
+
+        var valor2 = document.getElementById('cantidad').value;
+
+        total = (precio * valor2);
+        var valortotal = document.getElementById('valor_total').value;
+
+        var Display = document.getElementById('valor_total');
+        Display.innerHTML = total;
+        }
+
+
+</script>
+{% endblock %}
